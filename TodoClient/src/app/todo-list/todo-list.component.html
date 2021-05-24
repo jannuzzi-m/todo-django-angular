@@ -1,0 +1,38 @@
+<app-header></app-header>
+
+<div class="container">
+  <div class="row" style="display: flex; justify-content: center;">
+    <div class=""><p style="font-size: large;">You have <span style="color: green;">{{todoCount.done}}</span> items done and <span style="color: red;">{{todoCount.notDone}}</span> items not done yet</p></div>
+  </div>
+        
+  <div class="row">
+    <div class="col-6">
+      
+      <div class="col s6 m6" >
+        <div class="card brown lighten-3 small">
+          <div class="card-content white-text">
+            <input placeholder="Title" class="card-title white-text" [(ngModel)]="currentTitle"/>
+            <textarea class="white-text materialize-textarea" cols="12" placeholder="Description" [(ngModel)]="currentDescription"></textarea>
+          </div>
+          <div class="card-action">
+            <a class="brown-text text-darken-2" (click)="addTodo()" style="cursor: pointer;">Add Todo</a>
+          </div>
+        </div>
+      </div>
+      <div class="col s6 m6" *ngFor="let todo of todos">
+        <div [ngClass]="todo.done ? 'lighten-3' : 'lighten-2'" class="card brown small">
+          <div class="card-content white-text">
+            <span class="card-title">{{ todo.title }}</span>
+            <p>{{ todo.description }}</p>
+          </div>
+          <div class="card-action">
+            <a [ngClass]="todo.done ? 'text-darken-4' : 'text-darken-2'" class="brown-text" (click)="togleDone(todo.id)" style="cursor: pointer;"[innerHTML]='todo.done ? "Congrats" : "Make it Done"'></a>
+            <a [ngClass]="todo.done ? 'text-darken-4' : 'text-darken-2'" class="brown-text" (click)="deleteTodo(todo.id)" style="cursor: pointer;">Delete it</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
