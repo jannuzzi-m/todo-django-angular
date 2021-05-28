@@ -31,8 +31,16 @@ class TodoDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                      IsOwner]
 
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                      IsOwner]
+
+    
+    
+        

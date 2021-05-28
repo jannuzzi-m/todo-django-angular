@@ -2,7 +2,6 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { Router } from "@angular/router"
-import { User } from '../Interfaces/user';
 
 @Component({
   selector: 'app-login',
@@ -19,16 +18,19 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  user:User = {
-    id: 1,
-    username: '',
-    password: ''
-  }
+  username: string = '';
+  password: string = '';
   login() {
-    // if(!this.user.username){return}
-    this.userService.getTodos().subscribe(todos => console.log(todos))
-    // this.userService.user = this.user;
-    // this.router.navigate(['/dashboard']);
+    if (!this.username) { return }
+    this.userService.requestUserToken(this.username, this.password).subscribe(res => {
+      if(!res?.token){ return }
+      this.userService.setUserToken(res.token);
+      
+      console.log(res)
+      this.router.navigate(['/dashboard']);
+    }
+    )
   }
 
 }
+

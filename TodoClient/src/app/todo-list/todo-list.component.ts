@@ -18,42 +18,46 @@ export class TodoListComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    if(!this.userService.getUser()){
+    if(!this.userService.getUserToken()){
       this.router.navigate(['/login']);
     }
-    this.todos = this.todoService.getTodos();
-    this.getTodoCount();
+    this.todoService.getTodos().subscribe(res => {
+      this.todos = res;
+      
+    });
   }
   getTodoCount(){
-    this.todoCount = this.todoService.getTodoCount()
+    this.todoCount = {
+      done: 1,
+      notDone: 2
+    }
   }
 
-  todos:Todo[] = this.todoService.todos;
+  todos:Todo[] = [];
 
   currentTitle: string = '';
   currentDescription: string = '';
-  todoCount:{done:number, notDone: number} = this.todoService.getTodoCount();
+  todoCount:{done:number, notDone: number} = {
+    done: 1,
+    notDone: 2
+  };
 
   addTodo(){
-    if(!this.currentTitle) return;
-    this.todoService.addTodo(this.currentTitle, this.currentDescription);
-    this.todos = this.todoService.getTodos()
-    this.currentTitle = '';
-    this.currentDescription = '';
-    this.getTodoCount();
-    console.log(this.todos);
+    this.todoService.addTodo(this.currentTitle, this.currentDescription).subscribe(res => {
+      console.log(res)
+      this.todos = [res, ...this.todos];
+      this.currentTitle = '';
+      this.currentDescription = '';
+    });
   }
   deleteTodo(id: number){
-    this.todoService.deleteTodo(id);
-    this.todos = this.todoService.getTodos()
-    console.log(this.todos);
-    this.getTodoCount();
+    this.todoService.deleteTodo(id).subscribe(res => console.log(res))
+    this.todos = this.todos.filter(todo => todo.id == id? false: true)
   }
-  togleDone(id:number){
-    this.todoService.togleDone(id);
-    this.todos = this.todoService.getTodos()
-    this.getTodoCount();
-    
+  togleDone(id:number, done:boolean){
+    this.todoService.togleDone(id, done).subscribe(res => {
+      this.todos = this.todos.map(todo =>  todo.id == id? {...todo, done: !todo.done}: todo)
+      console.log(res)
+    });
   }
-
 }

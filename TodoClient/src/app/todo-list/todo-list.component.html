@@ -26,7 +26,7 @@
             <p>{{ todo.description }}</p>
           </div>
           <div class="card-action">
-            <a [ngClass]="todo.done ? 'text-darken-4' : 'text-darken-2'" class="brown-text" (click)="togleDone(todo.id)" style="cursor: pointer;"[innerHTML]='todo.done ? "Congrats" : "Make it Done"'></a>
+            <a [ngClass]="todo.done ? 'text-darken-4' : 'text-darken-2'" class="brown-text" (click)="togleDone(todo.id, todo.done)" style="cursor: pointer;"[innerHTML]='todo.done ? "Congrats" : "Make it Done"'></a>
             <a [ngClass]="todo.done ? 'text-darken-4' : 'text-darken-2'" class="brown-text" (click)="deleteTodo(todo.id)" style="cursor: pointer;">Delete it</a>
           </div>
         </div>

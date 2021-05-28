@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\jannu\\Envs\\django\\Scripts\\python.exe",
+    "python.pythonPath": "/home/agriness/dev/envs/bin/python3",
     "python.analysis.extraPaths": ["server"],
 
 }

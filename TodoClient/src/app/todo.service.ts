@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Todo} from './Interfaces/todo';
 import { UserService } from './user.service';
+import { HttpClient, HttpHeaders, HttpResponseBase } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observer } from 'rxjs';
 
 
 @Injectable({
@@ -8,7 +12,8 @@ import { UserService } from './user.service';
 })
 export class TodoService {
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+    private http: HttpClient) { }
   currentId: number = 6;
   todos:Todo[] = [];
 
@@ -18,32 +23,48 @@ export class TodoService {
       notDone: this.todos.filter(todo => todo.done? false: true).length
     }
   }
-  getTodos():Todo[] {
-    return this.todos.filter(todo => todo.owner == this.userService.getUser()?.username);
+  private getHeader(){
+   
+    return  {
+      headers: new HttpHeaders({
+        Authorization: `Token ${this.userService.getUserToken()}` 
+  
+      })
+    };
+    
+  }
+  
+  getTodos():Observable<any> {
+    return this.http.get('http://127.0.0.1:8000/todo/', this.getHeader())
+    .pipe(
+      catchError(this.handleError([]))
+    );
   }
 
-  addTodo(title: string, description: string){
-    this.todos = [
-     ({
-      id: this.getId(),
+  addTodo(title: string, description: string):Observable<any>{
+    return this.http.post('http://127.0.0.1:8000/todo/', {
       title: title,
-      description: description?description: 'No Description',
-      owner: this.userService.getUser()?.username || 'None',
-      done:false
-    }),
-    ...this.todos
-  ]
+      description: description
+  }, this.getHeader())
       
   }
-  deleteTodo(id: number){
-    this.todos = this.todos.filter(todo => todo.id == id? false: true);
+  deleteTodo(id: number): Observable<any>{
+    return this.http.delete(`http://127.0.0.1:8000/todo/${id}/`, this.getHeader());
   }
-  getId():number{
-    this.currentId += 1;
-    return this.currentId + 1;
+ 
+  togleDone(id: number, done:boolean): Observable<any>{
+    return this.http.put(`http://127.0.0.1:8000/todo/${id}/`, {done: !done}, this.getHeader())
+
+   
   }
-  togleDone(id: number){
-   this.todos = this.todos.map(todo =>  todo.id == id? {...todo, done: !todo.done}: todo)
+  private handleError<T>(result?: T){
+    return (error: HttpResponseBase): Observable<T> => {
+      if(error.status == 400){
+
+      }
+      return of(result as T)
+    }
   }
+  
   
 }

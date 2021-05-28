@@ -14,7 +14,8 @@ export class HeaderComponent implements OnInit {
     private router: Router) { }
   ngOnInit(): void {}
   logout(){
-    this.userService.user = undefined;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'])
+
+
   }
 }
