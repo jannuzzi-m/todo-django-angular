@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 from todo.models import Todo
-from todo.serializers import TodoSerializer, UserSerializer
+from todo.serializers import RegisterSerializer, TodoSerializer, UserSerializer
 from django.contrib.auth.models import User
 from todo.permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
@@ -40,6 +40,15 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwner]
+
+class UserCreation(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+
+class UserDestroy(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
     
     

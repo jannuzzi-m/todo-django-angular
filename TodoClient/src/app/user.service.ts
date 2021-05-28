@@ -46,4 +46,14 @@ export class UserService {
   getUserToken(){
     return this.token;
   }
+
+  register(username:string, password:string):Observable<any>{
+    return this.http.post('http://127.0.0.1:8000/create-user/', {
+      username: username,
+      password: password
+    }).pipe(
+      catchError(() => of({}))
+    );
+
+  }
 }

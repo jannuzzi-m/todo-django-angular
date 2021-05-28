@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
       if(!res?.token){ return }
       this.userService.setUserToken(res.token);
       
-      console.log(res)
+      // console.log(res)
       this.router.navigate(['/dashboard']);
     }
     )
